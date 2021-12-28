@@ -1,19 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MangaGenerator
 {
     class Program
     {
+        private static readonly string[] acceptedFormats = new string [] { ".jpg", ".jpeg", ".png" }; 
+
         static void Main(string[] args)
         {
-            string n_tomo = args[0];
+            Console.WriteLine("Write the number of the volume");
+            string n_tomo = Console.ReadLine();
+            Console.WriteLine("Write the path of the chapters directory (empty if you want to use current directory)");
             var caps = Directory.EnumerateDirectories(Directory.GetCurrentDirectory()).ToList();
-            var d_tomo = Directory.CreateDirectory("Tomo 0" + n_tomo);
+            var d_tomo = Directory.CreateDirectory("Volume 0" + n_tomo);
             for (int i = 1; i < caps.Count + 1; i++)
             {
                 var files = Directory.EnumerateFiles(caps[i-1]);
@@ -21,7 +22,7 @@ namespace MangaGenerator
                 {
                     var fileinfo = new FileInfo(file);
                     string fileName = fileinfo.Name;
-                    if (fileinfo.Extension.ToLower() == ".jpg")
+                    if (acceptedFormats.Contains(fileinfo.Extension.ToLower()))
                     {
                         File.Copy(file,
                             Path.Combine(d_tomo.FullName, i + fileName));
